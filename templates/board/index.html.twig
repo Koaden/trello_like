@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello BoardController!{% endblock %}
+
+{% block body %}
+
+    <div {{ react_component('Hello', { fullName: 'Fabien' }) }}></div>
+
+{% endblock %}
