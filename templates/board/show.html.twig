@@ -1,0 +1,72 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Board : {{ board.name }}{% endblock %}
+
+{% block body %}
+<h1>{{ board.name }}</h1>
+
+<h2>Listes</h2>
+
+<div style="display: flex; gap: 20px;">
+    {% for list in board.lists|sort((a, b) => a.position <=> b.position) %}
+        <div style="border: 1px solid #ccc; padding: 10px; min-width: 200px;">
+            <h3>{{ list.title }}</h3>
+
+            <form method="post" action="{{ path('list_move', {id: list.id}) }}" style="display: inline;">
+                <input type="hidden" name="position" value="{{ list.position - 1 }}">
+                <button>↑</button>
+            </form>
+            <form method="post" action="{{ path('list_move', {id: list.id}) }}" style="display: inline;">
+                <input type="hidden" name="position" value="{{ list.position + 1 }}">
+                <button>↓</button>
+            </form>
+
+            <form method="post" action="{{ path('list_delete', {id: list.id}) }}" style="display: inline;">
+                <button>🗑️</button>
+            </form>
+
+            <hr>
+
+            {% for card in list.cards|sort((a, b) => a.position <=> b.position) %}
+                <div style="background: #eee; margin-bottom: 5px; padding: 5px;">
+                    <strong>{{ card.title }}</strong><br>
+                    <small>{{ card.description }}</small><br>
+
+                    <form method="post" action="{{ path('card_move', {id: card.id}) }}" style="display: inline;">
+                        <input type="hidden" name="listId" value="{{ list.id }}">
+                        <input type="hidden" name="position" value="{{ card.position - 1 }}">
+                        <button>↑</button>
+                    </form>
+                    <form method="post" action="{{ path('card_move', {id: card.id}) }}" style="display: inline;">
+                        <input type="hidden" name="listId" value="{{ list.id }}">
+                        <input type="hidden" name="position" value="{{ card.position + 1 }}">
+                        <button>↓</button>
+                    </form>
+
+                    <form method="post" action="{{ path('card_delete', {id: card.id}) }}" style="display: inline;">
+                        <button>🗑️</button>
+                    </form>
+                </div>
+            {% else %}
+                <em>Aucune carte</em>
+            {% endfor %}
+
+            <form method="post" action="{{ path('list_add_card', {id: list.id}) }}">
+                <input type="text" name="title" placeholder="Titre carte">
+                <input type="text" name="description" placeholder="Description">
+                <button>Ajouter carte</button>
+            </form>
+        </div>
+    {% endfor %}
+</div>
+
+<hr>
+
+{# Form ajout liste #}
+<h3>Ajouter une liste</h3>
+<form method="post" action="{{ path('board_add_list', {id: board.id}) }}">
+    <input type="text" name="title" placeholder="Nom liste">
+    <button>Ajouter liste</button>
+</form>
+
+{% endblock %}

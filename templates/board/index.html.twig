@@ -1,9 +1,27 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello BoardController!{% endblock %}
+{% block title %}Mes boards{% endblock %}
 
 {% block body %}
+<h1>Mes boards</h1>
 
-    <div {{ react_component('Hello', { fullName: 'Fabien' }) }}></div>
+<ul>
+    {% for board in boards %}
+        <li>
+            <a href="{{ path('board_show', {id: board.id}) }}">
+                {{ board.name }}
+            </a>
+        </li>
+    {% else %}
+        <li><em>Aucun board pour l’instant</em></li>
+    {% endfor %}
+</ul>
 
+<hr>
+
+<h3>Créer un nouveau board</h3>
+<form method="post">
+    <input type="text" name="name" placeholder="Nom du board">
+    <button>Créer</button>
+</form>
 {% endblock %}
